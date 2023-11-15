@@ -1,9 +1,10 @@
 data/
 data.zip
 *.DS_store
-
+*.ipynb
+log_file.txt
 __MACOSX/
-
+retrieval_model/
 run.bash
 
 *.pyc

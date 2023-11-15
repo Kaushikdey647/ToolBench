@@ -69,27 +69,28 @@ def shuffle_and_split_pairs(pairs):
 
 def create_n_save(data,columns,output_dir,save_name, header=False):
     temp_df = pd.DataFrame(data, columns=columns)
-    os.makedirs(output_dir, exist_ok=True)
+    print('Headers for the file: ', save_name)
+    print(temp_df.head())
     temp_df.to_csv(output_dir + save_name, sep='\t', index=False, header=header)
 
 def main():
 
     args = parse_arguments()
-
     os.makedirs(args.output_dir, exist_ok=True)
-
     query_data = read_json_file(args.query_file)
     test_index_data = read_json_file(args.index_file)
-
     query_train, query_test = split_dataset(query_data, test_index_data)
-
     write_json_file(args.output_dir + '/train.json', query_train)
     write_json_file(args.output_dir + '/test.json', query_test)
+    print('Json Files Written to', args.output_dir)
 
     doc_id_map = {}
     query_id_map = {}
 
+    print('\nProcessing Train Data!......')
     documents_train, train_pairs = process_data(query_train, doc_id_map, query_id_map)
+
+    print('\nProcessing Test Data!......')
     documents_test, test_pairs = process_data(query_test, doc_id_map, query_id_map)
 
     train_queries, train_labels = shuffle_and_split_pairs(train_pairs)
@@ -99,12 +100,16 @@ def main():
     columns_queries = ['qid', 'query_text']
     columns_labels = ['qid', 'useless', 'docid', 'label']
 
-    create_n_save(documents_train, columns_documents, args.output_dir, '/corpus.tsv', False)
+    print('\nSaving Files!......')
+
+    create_n_save(documents_train, columns_documents, args.output_dir, '/corpus.tsv', True)
     create_n_save(train_queries, columns_queries, args.output_dir, '/train.query.txt')
     create_n_save(test_queries, columns_queries, args.output_dir, '/test.query.txt')
     create_n_save(train_labels, columns_labels, args.output_dir, '/qrels.train.tsv')
     create_n_save(test_labels, columns_labels, args.output_dir, '/qrels.test.tsv')
 
+    print('Files saved to: ', args.output_dir + '/corpus.tsv', args.output_dir + '/train.query.txt',
+          args.output_dir + '/test.query.txt', args.output_dir + '/qrels.train.tsv', args.output_dir + '/qrels.test.tsv')
 
 if __name__ == "__main__":
     main()
