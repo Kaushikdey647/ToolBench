@@ -129,4 +129,17 @@ def process_retrieval_ducoment(documents_df):
         ', optional_params: ' + json.dumps(doc.get('optional_parameters', '')) + \
         ', return_schema: ' + json.dumps(doc.get('template_response', ''))] = doc['category_name'] + '\t' + doc['tool_name'] + '\t' + doc['api_name']
     return ir_corpus, corpus2tool
+
+def process_retrieval_document_devrev(documents_df):
+    ir_corpus = {}
+    corpus2tool = {}
+    for row in documents_df.itertuples():
+        f_id = int(row.docid)
+        f_name = row.name
+        f_desc = row.description
+        f_params = json.loads(row.parameters)
+        ir_corpus[ f_id ] = f_name + ', ' + f_desc + ', ' + \
+            (f_params.get('required', '') or '') + ', ' + \
+            (f_params.get('optional', '') or '')
+    return ir_corpus, corpus2tool
     

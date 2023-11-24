@@ -13,8 +13,6 @@ import argparse
 import os
 from toolbench.utils import process_retrieval_ducoment
 
-import os
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_path", default=None, type=str, required=True,
                     help="The input data dir. Should contain the .tsv files for the task.")
@@ -73,7 +71,7 @@ ir_test_queries = {}
 ir_relevant_docs = {}
 train_samples = []
 
-documents_df = pd.read_csv(os.path.join(data_path, 'corpus.tsv'), sep='\t')
+documents_df = pd.read_csv(os.path.join(data_path, 'functions.csv'), sep='\t')
 ir_corpus, _ = process_retrieval_ducoment(documents_df)
 
 train_queries_df = pd.read_csv(os.path.join(data_path, 'train.query.txt'), sep='\t', names=['qid', 'query'])

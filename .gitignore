@@ -1,4 +1,5 @@
 data/
+.vscode/
 data.zip
 *.DS_store
 *.ipynb
